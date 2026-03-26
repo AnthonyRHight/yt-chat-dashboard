@@ -159,7 +159,7 @@ function MessageRow({ msg, onReclassify, onHighlight, keywords = [], compact = f
   );
 }
 
-function Panel({ title, dotColor, count, messages, onReclassify, keywords, emptyText, borderAccent }) {
+function Panel({ title, dotColor, count, messages, onReclassify, onHighlight, keywords, emptyText, borderAccent }) {
   const endRef = useRef(null);
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages.length]);
   return (
@@ -179,7 +179,7 @@ function Panel({ title, dotColor, count, messages, onReclassify, keywords, empty
       <div style={{ flex: 1, overflowY: "auto", padding: "3px 0" }}>
         {messages.length === 0
           ? <p style={{ color: "#4B5563", fontSize: 11, textAlign: "center", padding: "20px 12px", lineHeight: 1.6 }}>{emptyText}</p>
-          : messages.map((m) => <MessageRow key={m.id} msg={m} onReclassify={onReclassify} keywords={keywords} compact />)
+          : messages.map((m) => <MessageRow key={m.id} msg={m} onReclassify={onReclassify} onHighlight={onHighlight} keywords={keywords} compact />)
         }
         <div ref={endRef} />
       </div>
@@ -438,9 +438,9 @@ export default function App() {
         {/* Right: filtered panels */}
         <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 8, minHeight: 0 }}>
           <HighlightsPanel messages={highlighted} onRemove={removeHighlight} keywords={keywords} />
-          <Panel title="Questions" dotColor="#3B82F6" count={questions.length} messages={questions} onReclassify={reclassify} keywords={keywords} emptyText="No questions detected yet" />
-          <Panel title="Kind Words" dotColor="#10B981" count={kindWords.length} messages={kindWords} onReclassify={reclassify} keywords={keywords} emptyText="No kind words detected yet" borderAccent="#1D3A3A" />
-          <Panel title="Keyword Matches" dotColor="#A78BFA" count={kwMatches.length} messages={kwMatches} onReclassify={reclassify} keywords={keywords}
+          <Panel title="Questions" dotColor="#3B82F6" count={questions.length} messages={questions} onReclassify={reclassify} onHighlight={openContextMenu} keywords={keywords} emptyText="No questions detected yet" />
+          <Panel title="Kind Words" dotColor="#10B981" count={kindWords.length} messages={kindWords} onReclassify={reclassify} onHighlight={openContextMenu} keywords={keywords} emptyText="No kind words detected yet" borderAccent="#1D3A3A" />
+          <Panel title="Keyword Matches" dotColor="#A78BFA" count={kwMatches.length} messages={kwMatches} onReclassify={reclassify} onHighlight={openContextMenu} keywords={keywords}
             emptyText={keywords.length === 0 ? "Add keyword filters above to use this panel" : "No keyword matches yet — waiting for messages containing your filters"}
             borderAccent="#2A2347" />
         </div>
