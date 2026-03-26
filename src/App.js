@@ -354,7 +354,7 @@ export default function App() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [lastSince, setLastSince] = useState(null);
-  const [backendUrl, setBackendUrl] = useState(() => localStorage.getItem("ytcd_backend") || "");
+  const [backendUrl, setBackendUrl] = useState(() => localStorage.getItem("ytcd_backend") || "https://yt-chat-proxy-production.up.railway.app");
   const [showSettings, setShowSettings] = useState(false);
   const [showInfo, setShowInfo] = useState(() => localStorage.getItem("ytcd_hideinfo") !== "true");
   const [status, setStatus] = useState("idle");
