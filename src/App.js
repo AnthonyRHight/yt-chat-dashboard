@@ -363,7 +363,7 @@ export default function App() {
     try { return JSON.parse(localStorage.getItem("ytcd_keywords") || "[]"); } catch { return []; }
   });
   const [kwInput, setKwInput] = useState("");
-  const [kwColorIdx, setKwColorIdx] = useState(() => {
+  const [, setKwColorIdx] = useState(() => {
     try { return JSON.parse(localStorage.getItem("ytcd_keywords") || "[]").length; } catch { return 0; }
   });
 
