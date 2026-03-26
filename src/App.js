@@ -435,8 +435,8 @@ export default function App() {
           </div>
         </div>
 
-        {/* Right: filtered panels */}
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 8, minHeight: 0 }}>
+        {/* Right: 2x2 grid */}
+        <div style={{ flex: 1, display: "grid", gridTemplateColumns: "1fr 1fr", gridTemplateRows: "1fr 1fr", gap: 8, minHeight: 0 }}>
           <HighlightsPanel messages={highlighted} onRemove={removeHighlight} keywords={keywords} />
           <Panel title="Questions" dotColor="#3B82F6" count={questions.length} messages={questions} onReclassify={reclassify} onHighlight={openContextMenu} keywords={keywords} emptyText="No questions detected yet" />
           <Panel title="Kind Words" dotColor="#10B981" count={kindWords.length} messages={kindWords} onReclassify={reclassify} onHighlight={openContextMenu} keywords={keywords} emptyText="No kind words detected yet" borderAccent="#1D3A3A" />
