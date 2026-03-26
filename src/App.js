@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useState, useEffect, useRef, useCallback } from "react";
 
 const POLL_INTERVAL = 8000;
@@ -301,51 +302,6 @@ function KeywordTag({ kw, colorIdx, onRemove }) {
   );
 }
 
-// ─── Settings Modal ─────────────────────────────────────────────────────────
-function SettingsModal({ onClose, backendUrl, setBackendUrl }) {
-  const [localUrl, setLocalUrl] = useState(backendUrl);
-  return (
-    <div style={{
-      position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)", zIndex: 100,
-      display: "flex", alignItems: "center", justifyContent: "center",
-    }} onClick={onClose}>
-      <div style={{
-        background: "#1A1A1A", border: "1px solid #333",
-        borderRadius: 12, padding: 24, width: 480, maxWidth: "90vw",
-      }} onClick={(e) => e.stopPropagation()}>
-        <h2 style={{ margin: "0 0 20px", fontSize: 16, fontWeight: 700, color: "#F9FAFB" }}>⚙ Settings</h2>
-        <label style={{ display: "block", marginBottom: 24 }}>
-          <span style={{ fontSize: 12, fontWeight: 600, color: "#9CA3AF", display: "block", marginBottom: 6 }}>
-            Railway Backend URL
-          </span>
-          <input value={localUrl} onChange={(e) => setLocalUrl(e.target.value)}
-            placeholder="https://your-app.up.railway.app"
-            style={{
-              width: "100%", fontSize: 13, padding: "8px 10px",
-              borderRadius: 6, border: "1px solid #333",
-              background: "#111", color: "#D1D5DB", outline: "none",
-              boxSizing: "border-box", fontFamily: "inherit",
-            }} />
-          <span style={{ fontSize: 11, color: "#4B5563", marginTop: 4, display: "block" }}>
-            Your Railway backend URL — from Settings → Networking in your Railway project.
-          </span>
-        </label>
-        <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
-          <button onClick={onClose} style={{
-            padding: "8px 16px", borderRadius: 6, border: "1px solid #333",
-            background: "none", cursor: "pointer", fontSize: 13, color: "#9CA3AF", fontFamily: "inherit",
-          }}>Cancel</button>
-          <button onClick={() => { setBackendUrl(localUrl.replace(/\/$/, "")); onClose(); }} style={{
-            padding: "8px 16px", borderRadius: 6, border: "none",
-            background: "#1D4ED8", color: "#fff", cursor: "pointer",
-            fontSize: 13, fontWeight: 600, fontFamily: "inherit",
-          }}>Save</button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 // ─── Main App ───────────────────────────────────────────────────────────────
 export default function App() {
   const [url, setUrl] = useState("");
@@ -354,8 +310,7 @@ export default function App() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [lastSince, setLastSince] = useState(null);
-  const [backendUrl, setBackendUrl] = useState(() => localStorage.getItem("ytcd_backend") || "https://yt-chat-proxy-production.up.railway.app");
-  const [showSettings, setShowSettings] = useState(false);
+  const backendUrl = localStorage.getItem("ytcd_backend") || "https://yt-chat-proxy-production.up.railway.app";
   const [showInfo, setShowInfo] = useState(() => localStorage.getItem("ytcd_hideinfo") !== "true");
   const [status, setStatus] = useState("idle");
 
@@ -374,7 +329,6 @@ export default function App() {
   const allEndRef = useRef(null);
   const pollRef = useRef(null);
 
-  useEffect(() => { localStorage.setItem("ytcd_backend", backendUrl); }, [backendUrl]);
   useEffect(() => { localStorage.setItem("ytcd_keywords", JSON.stringify(keywords)); }, [keywords]);
   useEffect(() => { allEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages.length]);
 
@@ -419,7 +373,7 @@ export default function App() {
   };
 
   const fetchChat = useCallback(async (streamUrl, since) => {
-    if (!backendUrl) { setError("Set your Railway backend URL in ⚙ Settings first."); return; }
+    if (!backendUrl) { setError("Backend not configured."); return; }
     setStatus("polling");
     try {
       const params = new URLSearchParams({ url: streamUrl });
@@ -452,7 +406,6 @@ export default function App() {
 
   const connect = async () => {
     if (!url.trim()) { setError("Paste a YouTube live stream URL"); return; }
-    if (!backendUrl) { setShowSettings(true); return; }
     setLoading(true);
     setMessages([]);
     setLastSince(null);
@@ -547,12 +500,6 @@ export default function App() {
             <div style={{ width: 7, height: 7, borderRadius: "50%", background: statusColor }} />
             {statusLabel}
           </div>
-          <button onClick={() => setShowSettings(true)} style={{
-            padding: "5px 10px", borderRadius: 6, fontSize: 11, fontWeight: 600,
-            cursor: "pointer", border: "1px solid #333",
-            background: "#222", color: "#D1D5DB", fontFamily: "inherit",
-          }}>⚙ Settings</button>
-        </div>
       </div>
 
       {/* Info banner */}
@@ -742,14 +689,6 @@ export default function App() {
           y={contextMenu.y}
           onHighlight={addHighlight}
           onClose={() => setContextMenu(null)}
-        />
-      )}
-
-      {showSettings && (
-        <SettingsModal
-          onClose={() => setShowSettings(false)}
-          backendUrl={backendUrl}
-          setBackendUrl={setBackendUrl}
         />
       )}
     </div>
